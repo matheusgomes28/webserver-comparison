@@ -1,0 +1,10 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/home/matheus/development/cpp-webserver/conan/deb/CMakePresets.json",
+        "/home/matheus/development/cpp-webserver/conan/rel/CMakePresets.json"
+    ]
+}
