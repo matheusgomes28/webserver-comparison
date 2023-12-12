@@ -158,21 +158,9 @@
             "configuration": "Debug"
         },
         {
-            "name": "unix-deb-shared",
-            "displayName": "Unix Make Debug Build",
-            "configurePreset": "unix-deb-shared",
-            "configuration": "Debug"
-        },
-        {
             "name": "unix-rel",
             "displayName": "Unix Make Release Build",
             "configurePreset": "unix-rel",
-            "configuration": "Release"
-        },
-        {
-            "name": "unix-rel-shared",
-            "displayName": "Unix Make Release Build",
-            "configurePreset": "unix-rel-shared",
             "configuration": "Release"
         }
     ]
