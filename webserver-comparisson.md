@@ -10,8 +10,9 @@ better by analysing the following criteria:
   dependencies.
 - [x] Development activity on the repository.
 - [x] Documentation and development time.
-- [ ] Performance (requests per second using Drill).
-- [ ] Minimal binary size.
+- [x] Performance (requests per second using Drill).
+- [x] Minimal binary size.
+- [ ] Conclusion
 
 ## Background and Context
 
@@ -197,7 +198,7 @@ app with Rocket for the first time can take longer
 than expected. The average build time for me was about
 51.55 seconds. This also includes an outlier run I did
 before I started recording with OBS, so the true mean
-is likely higher!
+is likely higher! For this reason, Rust gets a 6/10 here.
 
 C++ blew my mind here. I initially did think it would be
 somewhat faster than the Rust build, since Oat++ has
@@ -252,6 +253,8 @@ it was difficult finding out how to return different error types from
 the endpoints (such as `Results<json, error>`), so I had to really
 dig in their documentation.
 
+10/10
+
 #### In Contrast, Oat++ was a Little Bit of an Nightmare
 
 Oat++ does have a shiny documentation page, but it's nowhere near
@@ -283,3 +286,113 @@ Overall, the Oat++ project took a couple of streams and just over
 
 For this reason, I'm sorry but I will give Oat++ a 5/10 here.
 
+### Let's Move on to Performance
+
+As a disclaimer: I am not a backend engineer, so I understand
+that the performance tests I've ran don't provide the whole
+picture. For example, I ran all the tests locally, accessing
+each backend through the localhost. Therefore, these tests
+kind of lack the data on how well each backend scales in the cloud,
+as well as the network side of things. We simply look at the number
+of requests per second, and the memory consumption when running
+on WSL2. So take this measurement with a pinch of salt!
+
+To measure performance, I've used a very simple Rust tool called
+drill. Drill allows you to bombard webservers with many requests
+per second, where you can define which type of data to send to
+an endpoint, number of iterations, concurrency options, etc.
+
+In essence, I hit a few break points over and over again. Beginning
+with the endpoint to add an item, we add 500 different items, each
+item having a name based on the iteration.
+
+Following that, we get each of the newly added items, as well as
+extra item names that were not added through the "get item" end
+point. this endpoint is hit about 10000 times.
+
+At the end, we hit the "get all items" endpoint, to test how each
+server backend handles returning a heavy load to the client. This
+is done 10000 times.
+
+#### Starting with Rust and Rocket
+
+The webserver actually performed quite well when looking at
+the number of requests per second that it could handle. The
+complete drill test takes around 134 seconds, and it could handle
+834 requests per seconds on the previously mentioned test case.
+
+#### Over to C++ and Oat++, Things Didn't Go So Well At First
+
+As the initial test took about 164 seconds to complete, resulting
+in the number of request per second being 681.
+
+I quickly figured out that the use of `std::map` was probably the cause
+of the "slowness" when compared to the Rust webserver. This is
+nothing new, Rust has a more modern and fast standard map implementation.
+
+When I switched to `std::unordered_map`, thing got even worse.
+The total test time jumped to 166 seconds, making the
+total request per second come down to 672.
+
+Clearly, the C++ standard maps are trash. Since I was using Conan,
+I quickly added a dependency on `dense_map`, by Martin Leitner-Ankerl.
+This is a map implementation that has recently been showing up on most
+benchmarks as one of the fastest C++ maps out there.
+
+This did actually help, making the total test time come down to
+157 seconds, and the requests per second to 711. Still, Rust seems
+to be way more efficient. Right?
+
+Well, when you consider memory usage and CPU usage, perhaps not so much:
+
+- C++/Oat++ CPU peaks @ 70%
+- Rust CPU peak @ 86% (22% increase)
+
+- C++ Memory Peaks @ 6330 bytes
+- Rust Memory Peaks @ 7156 bytes (13% increase)
+
+I also noticed that Oat++ was a true single-threaded backend
+framework, as it only spawned one OS thread for the test. Rocket
+spawned an OS thread per core on my machine, 12 overall. This is
+probably because of the nature of Tokio, the async backend used by
+Rocket, which, combined
+with the increase in average CPU core usage, this would certainly
+increase the energy bills over the C++ backend!
+
+Also, I do wonder what happens when the same app is implemented
+in Async Oat++ mode, as the library does support this. Unfortunately,
+I did not have time to implement it and find out!
+
+For this reason, I will give the Oat++ backend implementation a
+9/10, and the Rust one coming closely behind with an 8/10.
+
+
+### Bonus Measurements: Binary Size
+
+One minor thing I did notice was the overall size of the application,
+which indicates how "bloated" the framework it.
+
+The C++ and Oat++ implementation was extremely light, coming in with
+a featherweigh of 1.1Mb for the final Release-built application.
+
+On the other hand, the Rocket application ended up being a whopping
+9.3Mb for the final release build. This is nearly 9 times bigger
+than the Oat++ application. If there's something Rocket can learn
+from Oat++, it's how to reduce the bloat!
+
+Of course, disk space and computer memory is extremely cheap nowadays,
+so this measure shouldn't be a deal breaker. However, I have been
+trained as an Embedded engineer, so I do very much care about instruction
+optimisations and binary size!
+
+Oat++ gets a 10/10 here, and Rocket gets 8/10 here.
+
+### Overall
+
+I've really enjoyed researching and measure these two languages and
+frameworks against each other. On one hand, we have Rust, a very
+modern systems language with an amazing embedded build system,
+where you can include almoast anything with a simple terminal
+command. On the other, we have C++, a mamoth of a language,
+that has incredible hadrware portability and many many years
+of history.
