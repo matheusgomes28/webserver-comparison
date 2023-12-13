@@ -9,8 +9,6 @@
 #include "oatpp/core/macro/component.hpp"
 #include "oatpp/core/data/mapping/type/Map.hpp"
 
-#include <map>
-
 #include OATPP_CODEGEN_BEGIN(ApiController) ///< Begin Codegen
 
 using KvMap = ThreadSafeMap<std::string, std::string>;

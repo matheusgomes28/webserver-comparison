@@ -76,7 +76,8 @@
             "binaryDir": "${sourceDir}/build/unix-rel",
             "inherits": ["unix", "rel", "conan-rel"],
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/unix-rel/install"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/unix-rel/install",
+                "BUILD_DENSE_MAP": true
             }
         },
         {
