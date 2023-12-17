@@ -393,6 +393,77 @@ I've really enjoyed researching and measure these two languages and
 frameworks against each other. On one hand, we have Rust, a very
 modern systems language with an amazing embedded build system,
 where you can include almoast anything with a simple terminal
-command. On the other, we have C++, a mamoth of a language,
+call to `cargo`. On the other, we have C++, a mamoth of a language,
 that has incredible hadrware portability and many many years
 of history.
+
+I've got to say, I was extremely surprised at how well the C++
+framework seem to perform, considering that most of the web
+framework development and optimisations are done in different
+languages nowadays.
+
+Without furder ado, here are the overall results and my
+honest opinion on which language framework can give you
+more bang for your buck:
+
+- Rocket and Rust totalled an astounding X/TOTAL in the
+  measures we considered. The framework and dependency
+  management really makes the development time faster,
+  and coupled with the easy-to-read documentation, this
+  framework is a very strong choice for anyone who is serious
+  about developing backends.
+- Oat++ and C++ totalled an impressive Y/TOTAL in the same
+  measures. Again, I was actually very surprised how close
+  this combo came to the Rust counterpart. I pretty much
+  expected C++ to fall waaay behind Rust for web development.
+
+But which language and framework would I pick? Well, it's not
+that easy to answer.
+
+For the most part, I do agree with the data presented in
+this video. Rust and Rocket should be a preferred choice
+over Oat++ and C++. This is because I don't really value
+each of the measures equally - development time for me is
+king, and if that means taking a little bit of a hit in
+performance or eco-friendliness, so be it. We live in a time
+where getting your ideas out faster is much more valuable
+than releasing a perfectly optimised version of it.
+
+Therefore, considering the fact that it does unfortunately
+take a lot longer to develop a C++ backend compared to
+a Rust one, I'd pick this language/framework combo 9 times
+out of 10.
+
+However, it's not to completely say that I would NEVER
+pick the C++ frameworks. For example, if the whole
+stack of my project was C++, and I was tasked with adding
+a simple REST API for a reason or another, I'd probably
+stick to the same stack tech and develop a C++ backend,
+as it wouldn't add any more tech dependencies and
+huge build time differences.
+
+Would I pick Oat++ specifically? I'm not too sure. After
+I developed this test app with Oat++, I realised that
+the macro-based syntax is very confusing, and I wasn't
+a massive fan of the controller-based architecture. There
+is another C++ web framework that is just as popular,
+with a much more modern syntax: Drogon. I only realised
+how much nicer-to-write Drogon is AFTER I made this video,
+so I don't actually know whether it is better performant
+than Oat++.
+
+But in short: if you're creating a new project and want to
+use either C++ or Rust for backend development, pick Rust
+as you will have a nicer development time.
+
+#### Final Credits
+
+What do you think? I'm keen on finding out your
+opinions on C++ backends, and whether you had a good
+time developing a server-side application in it.
+
+Did you find it easier, harder, or about the same
+difficulty as developing a Rust web application?
+
+Thank you very much for watching, don't forget to drop
+like, and I'll see you in the next video!
